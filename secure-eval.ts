@@ -21,7 +21,7 @@ export function secureEval(code: string): Promise<void> {
                 window.addEventListener('message', (event) => {
                     const blob = new window.Blob([evalWorkerSource]);
                     const objectURL = window.URL.createObjectURL(blob);
-                    const evalWorker = new Worker(objectURL);
+                    const evalWorker = new Worker(objectURL, {type:'module'});
 
                     evalWorker.postMessage(event.data);
 
