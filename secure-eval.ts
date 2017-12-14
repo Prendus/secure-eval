@@ -1,4 +1,4 @@
-export function secureEval(code: string): Promise<void> {
+export function secureEval(code: string): Promise<any> {
     return new Promise((resolve, reject) => {
         const secureEvalIframe: HTMLIFrameElement = document.createElement('iframe');
         secureEvalIframe.setAttribute('sandbox', 'allow-scripts');

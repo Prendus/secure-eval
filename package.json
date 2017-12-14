@@ -3,7 +3,8 @@
   "version": "0.2.0",
   "description": "Allows secure eval execution of JavaScript code in a browser context.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+      "test": "xvfb-run -a electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --auto-run",
+      "test-window": "electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --window"
   },
   "repository": {
     "type": "git",
@@ -14,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Prendus/secure-eval/issues"
   },
-  "homepage": "https://github.com/Prendus/secure-eval#readme"
+  "homepage": "https://github.com/Prendus/secure-eval#readme",
+  "devDependencies": {
+    "guesswork": "^0.3.1"
+  }
 }
