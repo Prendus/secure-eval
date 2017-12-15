@@ -25,7 +25,7 @@ export function secureEval(code: string, timeLimit: number = 10000): Promise<Sec
                 \`;
 
                 window.addEventListener('message', (event) => {
-                    const blob = new window.Blob([evalWorkerSource]);
+                    const blob = new window.Blob([evalWorkerSource], { type: 'application/javascript' });
                     const objectURL = window.URL.createObjectURL(blob);
                     const evalWorker = new Worker(objectURL, {type:'module'});
 
