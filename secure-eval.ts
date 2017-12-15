@@ -3,7 +3,8 @@ export function secureEval(code: string): Promise<any> {
         const secureEvalIframe: HTMLIFrameElement = document.createElement('iframe');
         secureEvalIframe.setAttribute('sandbox', 'allow-scripts');
         secureEvalIframe.setAttribute('style', 'display: none;');
-        secureEvalIframe.setAttribute('srcdoc', `
+        //TODO we probably don't need the try catch...the worker itself has an onerror listener that we can use to get all of the errors
+        secureEvalIframe.setAttribute('src', 'data:text/html;base64,' + btoa(`
             <script>
                 const evalWorkerSource = \`
                     onmessage = function(event) {
@@ -36,7 +37,7 @@ export function secureEval(code: string): Promise<any> {
                     });
                 });
             </script>
-        `);
+        `));
 
         secureEvalIframe.addEventListener('load', () => {
             secureEvalIframe.contentWindow.postMessage(code, '*'); // It is fine to the the targetOrigin as *, because we do not care if a malicious site reads the code that we send. The code is not expected to be confidential if it is client-side. We only care that when the code is executed that it does not cause harm, which is why it is going to the secure iframe

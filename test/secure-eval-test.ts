@@ -37,9 +37,9 @@ class SecureEvalTest extends HTMLElement {
         //TODO from inside of th message handler. Also, look into how to clean up web workers properly, because that might be what is crashing Chrome
         test('Code times out after 10000 milliseconds', [jsc.number], (arbNumber) => {
             return new Promise(async (resolve, reject) => {
-                const timer = setTimeout(() => {
-                    reject(false);
-                }, 15000);
+                // const timer = setTimeout(() => {
+                //     reject(false);
+                // }, 15000);
 
                 console.log('before')
 
@@ -50,7 +50,7 @@ class SecureEvalTest extends HTMLElement {
 
                 console.log('here we come')
 
-                clearTimeout(timer);
+                // clearTimeout(timer);
 
                 resolve(true);
                 // return true;
