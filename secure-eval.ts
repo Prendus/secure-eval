@@ -1,4 +1,9 @@
-export function secureEval(code: string, timeLimit?: number): Promise<any> {
+export interface SecureEvalResult {
+    type: 'secure-eval-iframe-result' | 'secure-eval-iframe-worker-terminated';
+    [key: string]: any;
+}
+
+export function secureEval(code: string, timeLimit: number = 10000): Promise<SecureEvalResult> {
     return new Promise((resolve, reject) => {
         const secureEvalIframe: HTMLIFrameElement = document.createElement('iframe');
         secureEvalIframe.setAttribute('sandbox', 'allow-scripts');
@@ -31,7 +36,7 @@ export function secureEval(code: string, timeLimit?: number): Promise<any> {
                         window.parent.postMessage(Object.assign({}, {
                             type: 'secure-eval-iframe-worker-terminated'
                         }), '*');
-                    }, ${timeLimit === undefined ? 10000 : timeLimit});
+                    }, ${timeLimit});
 
                     evalWorker.addEventListener('message', (event) => {
                         window.parent.postMessage(Object.assign({}, event.data, {
@@ -50,7 +55,7 @@ export function secureEval(code: string, timeLimit?: number): Promise<any> {
 
         document.body.appendChild(secureEvalIframe);
 
-        function windowListener(event: Event) {
+        function windowListener(event: MessageEvent) {
             // if (event.data.type !== 'secure-eval-iframe-result') { // Because we are listening to all messages on the window, we must check for only the result from our secure iframe
             //     return;
             // }

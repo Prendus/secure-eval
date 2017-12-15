@@ -1,13 +1,10 @@
 import {jsc} from '../jsverify';
-import {secureEval} from '../secure-eval';
+import {secureEval, SecureEvalResult} from '../secure-eval';
 
 class SecureEvalTest extends HTMLElement {
-    prepareTests(test) {
-        test('evaling a postMessage returns correct object', [jsc.number], async (arbNumber) => {
-            const message: {
-                arbNumber: number,
-                type: 'secure-eval-iframe-result'
-            } = await secureEval(`
+    prepareTests(test: any) {
+        test('evaling a postMessage returns correct object', [jsc.number], async (arbNumber: number) => {
+            const message: SecureEvalResult = await secureEval(`
                 postMessage({
                     arbNumber: ${arbNumber}
                 });
@@ -19,11 +16,8 @@ class SecureEvalTest extends HTMLElement {
             );
         });
 
-        test('evaling code with an error returns correct object', [jsc.number], async (arbNumber) => {
-            const message: {
-                type: 'secure-eval-iframe-result',
-                error: string
-            } = await secureEval(`
+        test('evaling code with an error returns correct object', [jsc.number], async (arbNumber: number) => {
+            const message: SecureEvalResult = await secureEval(`
                 throw ${arbNumber};
             `);
 
@@ -33,7 +27,7 @@ class SecureEvalTest extends HTMLElement {
             );
         });
 
-        test('Code times out after time limit', [jsc.nat(500)], (arbNumber) => {
+        test('Code times out after time limit', [jsc.nat(500)], (arbNumber: number) => {
             return new Promise(async (resolve, reject) => {
                 const timer = setTimeout(() => {
                     reject(false);
