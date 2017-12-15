@@ -1,6 +1,6 @@
 {
   "name": "secure-eval",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Allows secure eval execution of JavaScript code in a browser context.",
   "scripts": {
     "test": "xvfb-run -a electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --auto-run",
