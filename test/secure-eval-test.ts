@@ -33,27 +33,19 @@ class SecureEvalTest extends HTMLElement {
             );
         });
 
-        //TODO the problem I am trying to fix below is how to know when the web worker is finished. If the user does not provide a postMessage or if an error is not thrown, the secure-eval promise will never finish, becuase I only resolve
-        //TODO from inside of th message handler. Also, look into how to clean up web workers properly, because that might be what is crashing Chrome
-        test('Code times out after 10000 milliseconds', [jsc.number], (arbNumber) => {
+        test('Code times out after time limit', [jsc.nat(500)], (arbNumber) => {
             return new Promise(async (resolve, reject) => {
-                // const timer = setTimeout(() => {
-                //     reject(false);
-                // }, 15000);
-
-                console.log('before')
+                const timer = setTimeout(() => {
+                    reject(false);
+                }, arbNumber + 10000);
 
                 await secureEval(`
-                    // while (true) {}
-                    console.log('monkey')
-                `);
+                    while (true) {}
+                `, arbNumber);
 
-                console.log('here we come')
-
-                // clearTimeout(timer);
+                clearTimeout(timer);
 
                 resolve(true);
-                // return true;
             });
         });
     }

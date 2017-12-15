@@ -1,4 +1,4 @@
-export function secureEval(code: string): Promise<any> {
+export function secureEval(code: string, timeLimit?: number): Promise<any> {
     return new Promise((resolve, reject) => {
         const secureEvalIframe: HTMLIFrameElement = document.createElement('iframe');
         secureEvalIframe.setAttribute('sandbox', 'allow-scripts');
@@ -28,7 +28,10 @@ export function secureEval(code: string): Promise<any> {
 
                     setTimeout(() => { // Terminate the web worker if it runs for too long
                         evalWorker.terminate();
-                    }, 10000);
+                        window.parent.postMessage(Object.assign({}, {
+                            type: 'secure-eval-iframe-worker-terminated'
+                        }), '*');
+                    }, ${timeLimit === undefined ? 10000 : timeLimit});
 
                     evalWorker.addEventListener('message', (event) => {
                         window.parent.postMessage(Object.assign({}, event.data, {
@@ -48,9 +51,9 @@ export function secureEval(code: string): Promise<any> {
         document.body.appendChild(secureEvalIframe);
 
         function windowListener(event: Event) {
-            if (event.data.type !== 'secure-eval-iframe-result') { // Because we are listening to all messages on the window, we must check for only the result from our secure iframe
-                return;
-            }
+            // if (event.data.type !== 'secure-eval-iframe-result') { // Because we are listening to all messages on the window, we must check for only the result from our secure iframe
+            //     return;
+            // }
 
             window.removeEventListener('message', windowListener); // remove the listener to avoid a memory leak
             document.body.removeChild(secureEvalIframe); // remove the iframe to avoid a memory leak
