@@ -1,17 +1,62 @@
+### Instructions for downloading versions of Firefox
+# * Download the desired version from https://ftp.mozilla.org/pub/firefox/releases/
+# * Use the linux-x86_64 version
+# * untar the downloaded file using: tar -xjf [filename]
+# * For use with karma-firefox-launcher, set the PATH environment variable to the firefox binary in the same command as npm run test
+
+### Instructions for downloading versions of Chromium
+# * Go here for "official" instructions (honestly, downloading Chromium versions is kind of messy): https://www.chromium.org/getting-involved/download-chromium
+# * Use this to get the branch_base_position: https://omahaproxy.appspot.com/
+# * Take the branch_base_position number and search for it here: https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=Linux_x64/
+# * If it doesn't come up, you'll just have to increment or decrement the number until you find a match with the correct version of CHROMIUM_BIN
+# * Once you've found the correct number, put it into this URL in place of [branch_base_position]: https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F[branch_base_position]%2Fchrome-linux.zip?alt=media
+# * Use the unzip command to unzip the file
+# * For use with karma-chrome-launcher, set the CHROMIUM_BIN environment variable, using the export command, to the chrome binary
+
 version: 2
 
 jobs:
     build:
         working_directory: ~/secure-eval
         docker:
-            - image: circleci/node:8.9.3
+            - image: circleci/node:8.11.1@sha256:cc078ac24326b6ba3e28eb1adb7f300fec7c17d2756850a2ffa436d18d629ddc
         steps:
             - checkout
             - run:
                 name: Set permissions
-                command: sudo chown -R circleci /usr/local/lib/node_modules
+                command: sudo chown -R circleci /usr/local/lib/node_modules && sudo chown -R circleci /usr/local/bin
             - run:
-                name: Install Electron dependencies
-                command: sudo apt-get update && sudo apt-get install xvfb && sudo apt-get install libgtk2.0-0 && sudo apt-get install libxtst6 && sudo apt-get install libXss1 && sudo apt-get install Libgconf-2-4 && sudo apt-get install libnss3 && sudo apt-get install libasound2
+                name: Install Chromium 68
+                command: wget https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x68%2F530372%2Fchrome-linux.zip?alt=media && unzip Linux_x68%2F530372%2Fchrome-linux.zip?alt=media
+            - run:
+                name: Install Chromium dependencies
+                command: sudo apt-get update && sudo apt-get install libxcomposite1 libxcursor1 libxi6 libxtst6 libnss3 libcups2 libxss1 libxrandr2 libasound2 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0
+            #- run:
+            #    name: Install Firefox 59
+            #    command: wget https://ftp.mozilla.org/pub/firefox/releases/59.0.2/linux-x86_64/en-US/firefox-59.0.2.tar.bz2 && tar -xjf firefox-59.0.2.tar.bz2
+            #- run:
+            #   name: Install Firefox dependencies
+            #   command: sudo apt-get update && sudo apt-get install libgtk-3-dev
             - run: npm install
-            - run: npm test
+            - run: PATH=$PATH:~/secure-eval/firefox && export CHROMIUM_BIN=~/secure-eval/chrome-linux/chrome && npm test
+    #release:
+    #    working_directory: ~/secure-eval
+    #    docker:
+    #        - image: circleci/node:8.11.1@sha256:cc078ac24326b6ba3e28eb1adb7f300fec7c17d2756850a2ffa436d18d629ddc
+    #    steps:
+    #        - checkout
+    #        - run: npm install
+    #        - run: npx semantic-release
+
+workflows:
+    version: 2
+    test_and_release:
+        jobs:
+            - build
+            #- release:
+            #    requires:
+            #        - build
+            #    filters:
+            #        branches:
+            #            only:
+            #                - master
