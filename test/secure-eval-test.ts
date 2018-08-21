@@ -1,9 +1,9 @@
-import {jsc} from '../jsverify';
+import jsverify from 'jsverify-es-module';
 import {secureEval, SecureEvalResult} from '../secure-eval';
 
 class SecureEvalTest extends HTMLElement {
     prepareTests(test: any) {
-        test('evaling a postMessage returns correct object', [jsc.number], async (arbNumber: number) => {
+        test('evaling a postMessage returns correct object', [jsverify.nat(500)], async (arbNumber: number) => {
             const message: SecureEvalResult = await secureEval(`
                 postMessage({
                     arbNumber: ${arbNumber}
@@ -16,18 +16,18 @@ class SecureEvalTest extends HTMLElement {
             );
         });
 
-        test('evaling code with an error returns correct object', [jsc.number], async (arbNumber: number) => {
+        test('evaling code with an error returns correct object', [jsverify.nat(500)], async (arbNumber: number) => {
             const message: SecureEvalResult = await secureEval(`
                 throw ${arbNumber};
             `);
-
+            
             return (
-                message.type === 'secure-eval-iframe-result',
+                message.type === 'secure-eval-iframe-result' &&
                 message.error === arbNumber.toString()
             );
         });
 
-        test('Code times out after time limit', [jsc.nat(500)], (arbNumber: number) => {
+        test('Code times out after time limit', [jsverify.nat(500)], (arbNumber: number) => {
             return new Promise(async (resolve, reject) => {
                 const timer = setTimeout(() => {
                     reject(false);
