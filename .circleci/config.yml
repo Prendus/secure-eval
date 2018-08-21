@@ -26,8 +26,8 @@ jobs:
                 name: Set permissions
                 command: sudo chown -R circleci /usr/local/lib/node_modules && sudo chown -R circleci /usr/local/bin
             - run:
-                name: Install Chromium 68
-                command: wget https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x68%2F530372%2Fchrome-linux.zip?alt=media && unzip Linux_x68%2F530372%2Fchrome-linux.zip?alt=media
+                name: Install latest Chromium
+                command: wget https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F530372%2Fchrome-linux.zip?alt=media && unzip Linux_x64%2F530372%2Fchrome-linux.zip?alt=media
             - run:
                 name: Install Chromium dependencies
                 command: sudo apt-get update && sudo apt-get install libxcomposite1 libxcursor1 libxi6 libxtst6 libnss3 libcups2 libxss1 libxrandr2 libasound2 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0
