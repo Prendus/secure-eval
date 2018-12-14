@@ -18,7 +18,7 @@ const dangerousCode = `
     window.parent.postMessage({
         type: 'secure-eval-iframe-result',
         dangerousValue
-    });
+    }, '*');
 `;
 
 executeDangerousUserCode(dangerousCode);
