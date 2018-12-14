@@ -6,6 +6,7 @@
     "test": "guesswork chromium --entry test/index.js",
     "test-manual": "guesswork --entry test/index.js"
   },
+  "main": "secure-eval.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Prendus/secure-eval.git"
