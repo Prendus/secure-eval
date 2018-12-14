@@ -1,6 +1,6 @@
 {
   "name": "secure-eval",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Allows secure eval execution of JavaScript code in a browser context.",
   "scripts": {
     "test": "guesswork chromium --entry test/index.js",
