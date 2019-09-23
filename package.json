@@ -1,12 +1,18 @@
 {
   "name": "secure-eval",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Allows secure eval execution of JavaScript code in a browser context.",
+  "main": "dist/secure-eval.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "guesswork chromium --entry test/index.js",
-    "test-manual": "guesswork --entry test/index.js"
+    "test-manual": "guesswork --entry test/index.js",
+    "build": "rollup -c",
+    "start": "rollup -cw",
+    "prepublish": "yarn build"
   },
-  "main": "secure-eval.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Prendus/secure-eval.git"
@@ -18,7 +24,14 @@
   },
   "homepage": "https://github.com/Prendus/secure-eval#readme",
   "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
     "guesswork": "^0.11.2",
+    "rollup": "^1.21.4",
+    "rollup-plugin-typescript": "^1.0.1",
     "zwitterion": "^0.27.0"
+  },
+  "dependencies": {
+    "tslib": "^1.10.0"
   }
 }
